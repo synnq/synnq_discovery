@@ -24,7 +24,7 @@ function getIPv4(address) {
 // Endpoint to register a new node
 app.post('/register_node', (req, res) => {
     const { id, public_key } = req.body;
-    const address = getIPv4(req.ip || req.socket.remoteAddress); // Get the IPv4 address of the sender
+    const address = req.address;
 
     if (!id || !address || !public_key) {
         return res.status(400).send('Node must include id, address, and public_key');
