@@ -25,7 +25,7 @@ function getIPv4(address) {
 app.post('/register_node', (req, res) => {
     const { id, public_key } = req.body;
     const address = req.address;
-
+    console.log(address);
     if (!id || !address || !public_key) {
         return res.status(400).send('Node must include id, address, and public_key');
     }
