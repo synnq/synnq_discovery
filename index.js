@@ -5,22 +5,26 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
+// Trust the first proxy in front of your application
+// Adjust the number based on your infrastructure setup
+app.set('trust proxy', true);
+
 // In-memory storage for registered nodes
 let nodes = {};
 
 // Helper function to extract IPv4 address
-function getIPv4(remoteAddress) {
+function getIPv4(address) {
     // If the IP is IPv6, it might be in the form "::ffff:192.168.1.1"
-    if (remoteAddress.includes('::ffff:')) {
-        return remoteAddress.split('::ffff:')[1];
+    if (address.includes('::ffff:')) {
+        return address.split('::ffff:')[1];
     }
-    return remoteAddress;
+    return address;
 }
 
 // Endpoint to register a new node
 app.post('/register_node', (req, res) => {
     const { id, public_key } = req.body;
-    const address = getIPv4(req.socket.remoteAddress); // Get the IPv4 address of the sender
+    const address = getIPv4(req.ip || req.socket.remoteAddress); // Get the IPv4 address of the sender
 
     if (!id || !address || !public_key) {
         return res.status(400).send('Node must include id, address, and public_key');
