@@ -9,19 +9,18 @@ app.use(bodyParser.json());
 let nodes = {};
 
 // Helper function to extract IPv4 address
-function getIPv4(req) {
-    const ip = req.ip;
+function getIPv4(remoteAddress) {
     // If the IP is IPv6, it might be in the form "::ffff:192.168.1.1"
-    if (ip.includes('::ffff:')) {
-        return ip.split('::ffff:')[1];
+    if (remoteAddress.includes('::ffff:')) {
+        return remoteAddress.split('::ffff:')[1];
     }
-    return ip;
+    return remoteAddress;
 }
 
 // Endpoint to register a new node
 app.post('/register_node', (req, res) => {
     const { id, public_key } = req.body;
-    const address = getIPv4(req); // Get the IPv4 address of the sender
+    const address = getIPv4(req.socket.remoteAddress); // Get the IPv4 address of the sender
 
     if (!id || !address || !public_key) {
         return res.status(400).send('Node must include id, address, and public_key');
