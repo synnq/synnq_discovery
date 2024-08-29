@@ -23,8 +23,7 @@ function getIPv4(address) {
 
 // Endpoint to register a new node
 app.post('/register_node', (req, res) => {
-    const { id, public_key } = req.body;
-    const address = req.address;
+    const { id, address, public_key } = req.body;
     console.log(address);
     if (!id || !address || !public_key) {
         return res.status(400).send('Node must include id, address, and public_key');
@@ -61,7 +60,7 @@ app.get('/nodes', (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Discovery service running on port ${PORT}`);
 });
